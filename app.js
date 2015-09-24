@@ -4,13 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var config = require('config');
-var Logger = require('le_node');
 
 var routes = require('./routes/index');
-var log = new Logger({
-  token: config.get('LOGENTRIES_TOKEN')
-});
+var log = require.main.require('../lib/logentries');
 
 var app = express();
 

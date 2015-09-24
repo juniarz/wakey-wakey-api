@@ -2,5 +2,5 @@
 /.idea
 *.log
 /node_modules
-/lib
+/Start Present Database Server.lnk
 Thumbs.db

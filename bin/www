@@ -7,11 +7,10 @@
 var app = require('../app');
 var debug = require('debug')('API:server');
 var http = require('http');
-var config = require('config');
-var Logger = require('le_node');
-var log = new Logger({
-  token: config.get('LOGENTRIES_TOKEN')
-});
+var moment = require.main.require('../lib/moment');
+var db = require.main.require('../lib/db');
+var log = require.main.require('../lib/logentries');
+
 
 /**
  * Get port from environment and store in Express.
