@@ -20,17 +20,27 @@ var hashPassword = function (password, salt, callback) {
     crypto.pbkdf2(password, salt, iterations, keyLen, callback);
 }
 
-schema.methods.register = function(username, password, email, callback) {
-    var user = this;
-    var passwordSalt = uuid.v4();
-    hashPassword(password, passwordSalt, function(err, passwordHash) {
-        user.Username = username;
-        user.Password = passwordHash;
-        user.Password_Salt = passwordSalt;
-        user.Email = email;
-        user.save(function (err) {
-            callback(err);
+schema.statics.register = function(username, password, email, callback) {
+
+    this.findOne({ $or : [{'Username': username}, {'Email': email}] }, function(err, existingUser) {
+        if (err) return callback(err);
+
+        if (existingUser) {
+            return callback(new Error("Username or Email is taken."));
+        }
+
+        var user = new User();
+        var passwordSalt = uuid.v4();
+        hashPassword(password, passwordSalt, function(err, passwordHash) {
+            user.Username = username;
+            user.Password = passwordHash;
+            user.Password_Salt = passwordSalt;
+            user.Email = email;
+            user.save(function (err) {
+                callback(err);
+            });
         });
+
     });
 }
 
