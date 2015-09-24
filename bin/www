@@ -7,6 +7,11 @@
 var app = require('../app');
 var debug = require('debug')('API:server');
 var http = require('http');
+var config = require('config');
+var Logger = require('le_node');
+var log = new Logger({
+  token: config.get('LOGENTRIES_TOKEN')
+});
 
 /**
  * Get port from environment and store in Express.
@@ -55,6 +60,7 @@ function normalizePort(val) {
 
 function onError(error) {
   if (error.syscall !== 'listen') {
+    log.err(error);
     throw error;
   }
 
@@ -66,13 +72,16 @@ function onError(error) {
   switch (error.code) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');
+      log.err(bind + ' requires elevated privileges');
       process.exit(1);
       break;
     case 'EADDRINUSE':
       console.error(bind + ' is already in use');
+      log.err(bind + ' is already in use');
       process.exit(1);
       break;
     default:
+      log.err(error);
       throw error;
   }
 }
@@ -87,4 +96,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  log.info('API Server started.');
 }

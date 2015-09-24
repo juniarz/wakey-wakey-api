@@ -1,9 +1,17 @@
 var express = require('express');
 var router = express.Router();
+var config = require('config');
+var Logger = require('le_node');
+var log = new Logger({
+  token: config.get('LOGENTRIES_TOKEN')
+});
 
-/* GET home page. */
+router.get('/_status', function(req, res, next) {
+  res.send("OK");
+});
+
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.send("OK");
 });
 
 module.exports = router;
