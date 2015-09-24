@@ -7,8 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('API:server');
 var http = require('http');
-var moment = require.main.require('../lib/moment');
-var db = require.main.require('../lib/db');
 var log = require.main.require('../lib/logentries');
 
 
