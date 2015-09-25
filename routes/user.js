@@ -10,7 +10,7 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
 // Login
-router.post('/', function(req, res, next) {
+router.post('/', function (req, res, next) {
     if (!req.body || !req.body.password || !req.body.email) {
         var err = new Error("Missing fields.");
         log.err(err);
@@ -27,7 +27,7 @@ router.post('/', function(req, res, next) {
 });
 
 // Register
-router.post('/register', function(req, res, next) {
+router.post('/register', function (req, res, next) {
     if (!req.body || !req.body.username || !req.body.password || !req.body.email) {
         var err = new Error("Missing fields.");
         log.err(err);
