@@ -4,9 +4,9 @@
 var express = require('express');
 var router = express.Router();
 
-var config = require('config');
+var config = require.main.require('../lib/config-wrapper');
 var aws = require('aws-sdk');
-aws.config.update({accessKeyId: config.get("AWS.ACCESS_KEY"), secretAccessKey: config.get("AWS.SECRET")});
+aws.config.update({accessKeyId: config("AWS.ACCESS_KEY"), secretAccessKey: config("AWS.SECRET")});
 var s3 = new aws.S3();
 var uuid = require('node-uuid');
 
@@ -39,7 +39,7 @@ router.get('/sign', function (req, res, next) {
     var filename = uuid.v4();
     var offlineVoice_id = mongoose.Types.ObjectId();
     var params = {
-        Bucket: config.get("AWS.S3_BUCKET"),
+        Bucket: config("AWS.S3_BUCKET"),
         Key: filename + "." + req.query.file_ext,
         Expires: 60,
         ACL: 'public-read',
@@ -54,7 +54,7 @@ router.get('/sign', function (req, res, next) {
         }
         else {
 
-            OfflineVoice.create(offlineVoice_id, 'https://' + config.get("AWS.S3_BUCKET") + '.s3.amazonaws.com/' + filename + "." + req.query.file_ext, req.query.user_id, function (err) {
+            OfflineVoice.create(offlineVoice_id, 'https://' + config("AWS.S3_BUCKET") + '.s3.amazonaws.com/' + filename + "." + req.query.file_ext, req.query.user_id, function (err) {
                 if (err) {
                     log.err("Failed to create OfflineVoice: " + err);
                     return res.status(404).send(err);

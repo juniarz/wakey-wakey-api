@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var config = require('config');
+var config = require.main.require('../lib/config-wrapper');
 var moment = require('moment');
 
 var schema = new mongoose.Schema({
@@ -11,7 +11,7 @@ var schema = new mongoose.Schema({
     GCM_Token: {type: String},
     APN_Token: {type: String},
     CreatedOn: {type: Date, default: Date.now},
-    ExpireOn: {type: Date, default: moment().add(config.get("TOKEN_EXPIRY_IN_DAYS"), 'days')},
+    ExpireOn: {type: Date, default: moment().add(config("TOKEN_EXPIRY_IN_DAYS"), 'days')},
     ModifiedOn: {type: Date}
 });
 
