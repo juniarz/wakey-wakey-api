@@ -11,6 +11,7 @@ require.main.require('../lib/db');
 
 var routes = require('./routes/index');
 var users = require('./routes/user');
+var offline_voices = require('./routes/offline_voice');
 var log = require.main.require('../lib/logentries');
 
 var app = express();
@@ -30,6 +31,7 @@ app.disable('etag');
 
 app.use('/', routes);
 app.use('/user', users);
+app.use('/offline_voice', offline_voices);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
