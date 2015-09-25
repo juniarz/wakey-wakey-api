@@ -18,7 +18,7 @@ var hashPassword = function (password, salt, callback) {
     var iterations = 10000,
         keyLen = 64;
     crypto.pbkdf2(password, salt, iterations, keyLen, callback);
-}
+};
 
 schema.statics.register = function(username, password, email, callback) {
 
@@ -42,7 +42,7 @@ schema.statics.register = function(username, password, email, callback) {
         });
 
     });
-}
+};
 
 schema.statics.login = function(email, password, callback) {
     this.findOne({ Email: email }, function(err, user) {
@@ -64,6 +64,6 @@ schema.statics.login = function(email, password, callback) {
 
         return callback(new Error("Not found."), null);
     });
-}
+};
 
 var User = module.exports = mongoose.model('User', schema);

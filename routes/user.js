@@ -1,3 +1,6 @@
+/**
+ * Created by Jia Rong on 9/25/2015.
+ */
 var express = require('express');
 var router = express.Router();
 var log = require.main.require('../lib/logentries');
@@ -9,7 +12,7 @@ var User = mongoose.model('User');
 // Login
 router.post('/', function(req, res, next) {
     if (!req.body || !req.body.password || !req.body.email) {
-        var err = new Error("Missing fields.")
+        var err = new Error("Missing fields.");
         log.err(err);
         return res.status(404).send(ResponseFormatter(err, null));
     }
@@ -26,7 +29,7 @@ router.post('/', function(req, res, next) {
 // Register
 router.post('/register', function(req, res, next) {
     if (!req.body || !req.body.username || !req.body.password || !req.body.email) {
-        var err = new Error("Missing fields.")
+        var err = new Error("Missing fields.");
         log.err(err);
         return res.status(404).send(ResponseFormatter(err, null));
     }
