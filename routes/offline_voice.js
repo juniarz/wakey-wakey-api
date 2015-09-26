@@ -4,6 +4,7 @@
 var express = require('express');
 var router = express.Router();
 
+var ResponseFormatter = require.main.require('../lib/response-formatter');
 var config = require.main.require('../lib/config-wrapper');
 var aws = require('aws-sdk');
 aws.config.update({accessKeyId: config("AWS.ACCESS_KEY"), secretAccessKey: config("AWS.SECRET")});
@@ -17,10 +18,10 @@ router.get('/', function (req, res, next) {
     OfflineVoice.list(req.query.user_id, function (err, list) {
         if (err) {
             log.err("Failed to list OfflineVoice: " + err);
-            return res.status(404).send(err);
+            return res.status(404).send(ResponseFormatter(err, null));
         }
 
-        res.send(list);
+        res.send(ResponseFormatter(err, list));
     });
 });
 
@@ -28,7 +29,7 @@ router.get('/published', function (req, res, next) {
     OfflineVoice.setPublished(req.query._id, function (err) {
         if (err) {
             log.err("Failed to update OfflineVoice: " + err);
-            return res.status(404).send(err);
+            return res.status(404).send(ResponseFormatter(err, null));
         }
 
         res.sendStatus(201);
@@ -51,19 +52,22 @@ router.get('/sign', function (req, res, next) {
     s3.getSignedUrl('putObject', params, function (err, signedUrl) {
         if (err) {
             console.log(err);
+            res.send(ResponseFormatter(err, null));
         }
         else {
 
             OfflineVoice.create(offlineVoice_id, 'https://' + config("AWS.S3_BUCKET") + '.s3.amazonaws.com/' + filename + "." + req.query.file_ext, req.query.user_id, function (err) {
                 if (err) {
                     log.err("Failed to create OfflineVoice: " + err);
-                    return res.status(404).send(err);
+                    return res.status(404).send(ResponseFormatter(err, null));
                 }
 
-                res.send({
+                var ret = {
                     offlineVoice_id: offlineVoice_id,
                     url: signedUrl
-                });
+                };
+
+                res.send(ResponseFormatter(err, ret));
             });
         }
     });

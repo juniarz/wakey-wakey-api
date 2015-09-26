@@ -13,6 +13,7 @@ var routes = require('./routes/index');
 var users = require('./routes/user');
 var offline_voices = require('./routes/offline_voice');
 var log = require.main.require('../lib/logentries');
+var ResponseFormatter = require.main.require('../lib/response-formatter');
 
 var app = express();
 
@@ -47,7 +48,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.send(err);
+    res.send(ResponseFormatter(err, null));
     log.err(err);
   });
 }
@@ -56,7 +57,7 @@ if (app.get('env') === 'development') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.send(err);
+  res.send(ResponseFormatter(err, null));
   log.err(err);
 });
 
