@@ -51,7 +51,7 @@ schema.statics.listened = function (_id, user_id, callback) {
 
 schema.statics.clearListened = function (user_id, callback) {
 
-    OfflineVoice.update({Listened: {$in: [user_id]}}, { $set: { Listened: [] }}, {multi: true}, function(err, model) {
+    OfflineVoice.update({Listened: {$in: [user_id]}}, { $pull: { 'Listened': user_id } }, {multi: true}, function(err, model) {
         callback(err);
     });
 }
