@@ -47,6 +47,17 @@ router.get('/listened', function (req, res, next) {
     });
 });
 
+router.get('/listened/clear', function (req, res, next) {
+    OfflineVoice.clearListened(req.query.user_id, function (err) {
+        if (err) {
+            log.err("Failed to clear OfflineVoice listened: " + err);
+            return res.status(404).send(ResponseFormatter(err, null));
+        }
+
+        res.sendStatus(201);
+    });
+});
+
 router.get('/sign', function (req, res, next) {
     var filename = uuid.v4();
     var offlineVoice_id = mongoose.Types.ObjectId();

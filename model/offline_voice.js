@@ -37,16 +37,23 @@ schema.statics.list = function (user_id, callback) {
 
 schema.statics.setPublished = function (_id, callback) {
 	
-	OfflineVoice.findByIdAndUpdate(_id, {Published: true}, {safe: true, upsert: false}, function(err, model) {
+	OfflineVoice.findByIdAndUpdate(_id, {Published: true}, {upsert: false}, function(err, model) {
 		callback(err);
 	});
 };
 
 schema.statics.listened = function (_id, user_id, callback) {
 	
-	OfflineVoice.findByIdAndUpdate(_id, {$push: {Listened: user_id}}, {safe: true, upsert: false}, function(err, model) {
+	OfflineVoice.findByIdAndUpdate(_id, {$push: {Listened: user_id}}, {upsert: false}, function(err, model) {
 		callback(err);
 	});
+}
+
+schema.statics.clearListened = function (user_id, callback) {
+
+    OfflineVoice.update({Listened: {$in: [user_id]}}, { $set: { Listened: [] }}, {multi: true}, function(err, model) {
+        callback(err);
+    });
 }
 
 schema.statics.delete = function (_id, callback) {
