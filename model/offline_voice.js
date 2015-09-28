@@ -4,7 +4,8 @@ var schema = new mongoose.Schema({
     URL: {type: String},
     User_ID: {type: mongoose.Schema.Types.ObjectId},
     Published: {type: Boolean, default: false},
-    CreatedOn: {type: Date, default: Date.now}
+    CreatedOn: {type: Date, default: Date.now},
+	Listened: {type: [mongoose.Schema.Types.ObjectId]}
 });
 
 schema.statics.create = function (_id, url, user_id, callback) {
@@ -29,22 +30,18 @@ schema.statics.list = function (user_id, callback) {
 };
 
 schema.statics.setPublished = function (_id, callback) {
-
-    this.findOne({'_id': _id}, function (err, offlineVoice) {
-        if (err) return callback(err);
-
-        if (!offlineVoice) {
-            return callback(new Error("OfflineVoice not found."));
-        }
-
-        offlineVoice.Published = true;
-        offlineVoice.save(function (err) {
-            callback(err);
-        });
-
-    });
-
+	
+	OfflineVoice.findByIdAndUpdate(_id, {Published: true}, {safe: true, upsert: false}, function(err, model) {
+		callback(err);
+	});
 };
+
+schema.statics.listened = function (_id, user_id, callback) {
+	
+	OfflineVoice.findByIdAndUpdate(_id, {$push: {Listened: user_id}}, {safe: true, upsert: false}, function(err, model) {
+		callback(err);
+	});
+}
 
 schema.statics.delete = function (_id, callback) {
 
