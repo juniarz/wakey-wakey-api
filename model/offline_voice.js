@@ -22,8 +22,14 @@ schema.statics.create = function (_id, url, user_id, callback) {
 
 schema.statics.list = function (user_id, callback) {
 
+    var query = [{Published: true}];
+
+    if (user_id) {
+        query.push({User_ID: {$ne: user_id}});
+        query.push({Listened: {$nin: [user_id]}});
+    }
     // Get all published voice that is not submitted by the user.
-    OfflineVoice.find({$and: [{User_ID: {$ne: user_id}}, {Published: true}]}, function (err, list) {
+    OfflineVoice.find({$and: query}, function (err, list) {
         callback(err, list);
     });
 
